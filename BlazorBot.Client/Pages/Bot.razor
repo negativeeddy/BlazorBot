@@ -1,0 +1,49 @@
+﻿@page "/bot"
+@using  BlazorBot.Client.Bot
+@using Microsoft.Bot.Schema
+@using Microsoft.Bot.Builder
+@using Console_EchoBot
+
+<h1>Blazot Bot</h1>
+<input type="text" id="botInput" bind="@botInput" />
+<button class="btn btn-primary" onclick="@SendToBot">Click me</button>
+<div>
+    @foreach (string s in conversation)
+    {
+        @s <br />
+    }
+</div>
+
+@functions {
+    BlazorAdapter adapter;
+    string botInput;
+    List<string> conversation = new List<string>();
+    int currentCount = 0;
+    EchoBot echoBot = new EchoBot();
+
+    async void SendToBot()
+    {
+        conversation.Add("YOU: " + botInput);
+        await adapter.ProcessActivityAsync(botInput,
+            async (turnContext, cancellationToken) => await echoBot.OnTurnAsync(turnContext));
+    }
+
+    protected override void OnInit()
+    {
+        adapter = new BlazorAdapter();
+        adapter.OnActivityPublished += (s, e) =>
+        {
+            IMessageActivity message = e.Activity.AsMessageActivity();
+            if (message.Attachments != null && message.Attachments.Any())
+            {
+                var attachment = message.Attachments.Count == 1 ? "1 attachment" : $"{message.Attachments.Count()} attachments";
+                Console.WriteLine($"{message.Text} with {attachment} ");
+            }
+            else
+            {
+                conversation.Add("BOT: " + message.Text);
+                Console.WriteLine($"{message.Text}");
+            }
+        };
+    }
+}
