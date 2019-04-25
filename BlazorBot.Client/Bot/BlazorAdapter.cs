@@ -10,21 +10,36 @@ namespace BlazorBot.Client.Bot
 {
     public class BlazorAdapter : BotAdapter
     {
-        public override Task DeleteActivityAsync(ITurnContext turnContext, ConversationReference reference, CancellationToken cancellationToken)
+        public string UserName { get; } = "User1";
+        public string BotName { get; } = "Bot";
+        public string ConversatinId { get; } = "Convo1";
+        public string UserId { get; } = "user";
+        public string BotId { get; } = "bot";
+        public string ChannelName { get; } = "Blazor";
+
+        public BlazorAdapter()
         {
-            throw new NotImplementedException();
         }
 
-        public event EventHandler<ConversationEventArgs> OnActivityPublished;
+        public BlazorAdapter(string userName, string userId, string botName, string botId, string conversationId)
+        {
+            UserName = userName;
+            UserId = userId;
+            BotName = botName;
+            BotId = botId;
+            ConversatinId = conversationId;
+        }
 
-        public async Task ProcessActivityAsync(string message, BotCallbackHandler callback = null)
+        public event EventHandler<ConversationEventArgs> OnNewActivity;
+
+        public async Task ProcessMessageAsync(string message, BotCallbackHandler callback = null)
         {
             if (message == null)
             {
                 return;
             }
 
-            // Performing the conversion from console text to an Activity for
+            // Performing the conversion from input to an Activity for
             // which the system handles all messages (from all unique services).
             // All processing is performed by the broader bot pipeline on the Activity
             // object.
@@ -36,10 +51,10 @@ namespace BlazorBot.Client.Bot
                 // The Bot Framework channel is identified by a unique ID.
                 // For example, "skype" is a common channel to represent the Skype service.
                 // We are inventing a new channel here.
-                ChannelId = "console",
-                From = new ChannelAccount(id: "user", name: "User1"),
-                Recipient = new ChannelAccount(id: "bot", name: "Bot"),
-                Conversation = new ConversationAccount(id: "Convo1"),
+                ChannelId = ChannelName,
+                From = new ChannelAccount(id: UserId, name: UserName),
+                Recipient = new ChannelAccount(id: BotId, name: BotName),
+                Conversation = new ConversationAccount(id: ConversatinId),
                 Timestamp = DateTime.UtcNow,
                 Id = Guid.NewGuid().ToString(),
                 Type = ActivityTypes.Message,
@@ -78,7 +93,7 @@ namespace BlazorBot.Client.Bot
                 {
                     case ActivityTypes.Message:
                         {
-                            OnActivityPublished?.Invoke(this, new ConversationEventArgs { Activity = activity });
+                            OnNewActivity?.Invoke(this, new ConversationEventArgs { Activity = activity });
                         }
 
                         break;
@@ -107,6 +122,11 @@ namespace BlazorBot.Client.Bot
             }
 
             return responses;
+        }
+
+        public override Task DeleteActivityAsync(ITurnContext turnContext, ConversationReference reference, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
         }
 
         public override Task<ResourceResponse> UpdateActivityAsync(ITurnContext turnContext, Activity activity, CancellationToken cancellationToken)

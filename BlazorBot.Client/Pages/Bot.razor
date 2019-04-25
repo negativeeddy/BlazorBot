@@ -24,14 +24,14 @@
     async void SendToBot()
     {
         conversation.Add("YOU: " + botInput);
-        await adapter.ProcessActivityAsync(botInput,
+        await adapter.ProcessMessageAsync(botInput,
             async (turnContext, cancellationToken) => await echoBot.OnTurnAsync(turnContext));
     }
 
     protected override void OnInit()
     {
         adapter = new BlazorAdapter();
-        adapter.OnActivityPublished += (s, e) =>
+        adapter.OnNewActivity += (s, e) =>
         {
             IMessageActivity message = e.Activity.AsMessageActivity();
             if (message.Attachments != null && message.Attachments.Any())
