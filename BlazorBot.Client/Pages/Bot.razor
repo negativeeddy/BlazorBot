@@ -4,9 +4,9 @@
 @using Microsoft.Bot.Builder
 @using Console_EchoBot
 
-<h1>Blazot Bot</h1>
+<h1>Blazor Bot</h1>
 <input type="text" id="botInput" bind="@botInput" />
-<button class="btn btn-primary" onclick="@SendToBot">Click me</button>
+<button class="btn btn-primary" onclick="@SendToBot">Send</button>
 <div>
     @foreach (string s in conversation)
     {
