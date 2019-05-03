@@ -1,0 +1,1 @@
+This is a sample of how to run a BotFramework bot inside of Blazor. For more details see the blog entry https://negativeeddy.wordpress.com/2019/05/03/blazorbot/
