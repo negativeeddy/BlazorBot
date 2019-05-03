@@ -12,7 +12,7 @@ namespace BlazorBot.Client.Bot
     {
         public string UserName { get; } = "User1";
         public string BotName { get; } = "Bot";
-        public string ConversatinId { get; } = "Convo1";
+        public string ConversationId { get; } = "Convo1";
         public string UserId { get; } = "user";
         public string BotId { get; } = "bot";
         public string ChannelName { get; } = "Blazor";
@@ -27,7 +27,7 @@ namespace BlazorBot.Client.Bot
             UserId = userId;
             BotName = botName;
             BotId = botId;
-            ConversatinId = conversationId;
+            ConversationId = conversationId;
         }
 
         public event EventHandler<ConversationEventArgs> OnNewActivity;
@@ -54,7 +54,7 @@ namespace BlazorBot.Client.Bot
                 ChannelId = ChannelName,
                 From = new ChannelAccount(id: UserId, name: UserName),
                 Recipient = new ChannelAccount(id: BotId, name: BotName),
-                Conversation = new ConversationAccount(id: ConversatinId),
+                Conversation = new ConversationAccount(id: ConversationId),
                 Timestamp = DateTime.UtcNow,
                 Id = Guid.NewGuid().ToString(),
                 Type = ActivityTypes.Message,
