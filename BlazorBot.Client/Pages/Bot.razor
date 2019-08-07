@@ -5,8 +5,8 @@
 @using Console_EchoBot
 
 <h1>Blazor Bot</h1>
-<input type="text" id="botInput" bind="@botInput" />
-<button class="btn btn-primary" onclick="@SendToBot">Send</button>
+<input type="text" id="botInput" @bind="botInput" />
+<button class="btn btn-primary" @onclick="SendToBot">Send</button>
 <div>
     @foreach (string s in conversation)
     {
@@ -14,7 +14,7 @@
     }
 </div>
 
-@functions {
+@code {
     BlazorAdapter adapter;
     string botInput;
     List<string> conversation = new List<string>();
